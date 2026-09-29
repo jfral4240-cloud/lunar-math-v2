@@ -1,0 +1,66 @@
+<Module>
+<ModulePrefs title="Ruffle"/>
+<Content type="html">
+<![CDATA[
+<!DOCTYPE HTML>
+<html>
+   <head>
+      <meta charset='utf8'>
+      <style>
+         html, body {
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            height: 100%;
+         }
+         #ruffle {
+            width: 100%;
+            height: 100%;
+         }
+      </style>
+   </head>
+   <body>
+      <div id='ruffle'></div>
+      <script src='https://unpkg.com/@ruffle-rs/ruffle'></script>
+      <script>
+         // Dynamically embed Ruffle and adjust size
+         var swfobject = {};
+         swfobject.embedSWF = function(url, containerId) {
+             var ruffle = window.RufflePlayer.newest();
+             var container = document.getElementById(containerId);
+
+             // Create the Ruffle player
+             var player = ruffle.createPlayer();
+             container.appendChild(player);
+
+             // Load the SWF file
+             if (url) {
+                 player.load({ url: url });
+             } else {
+                 console.error("No SWF file specified in the URL parameters.");
+             }
+
+             // Adjust player size to fit the window
+             const resizePlayer = () => {
+                 container.style.width = window.innerWidth + 'px';
+                 container.style.height = window.innerHeight + 'px';
+                 player.style.width = '100%';
+                 player.style.height = '100%';
+             };
+
+             resizePlayer();
+             window.addEventListener('resize', resizePlayer);
+         };
+
+         // Get the SWF file from query parameters
+         const urlParams = new URLSearchParams(window.location.search);
+         const swfUrl = urlParams.get('swf');
+
+         // Embed the SWF file using Ruffle
+         swfobject.embedSWF(swfUrl, 'ruffle');
+      </script>
+   </body>
+</html>
+]]>
+</Content>
+</Module>
